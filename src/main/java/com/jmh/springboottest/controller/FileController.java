@@ -1,12 +1,19 @@
 package com.jmh.springboottest.controller;
 
+import com.jmh.springboottest.pojo.File;
+import com.jmh.springboottest.pojo.RestResult;
+import com.jmh.springboottest.service.FileService;
 import com.jmh.springboottest.utils.FileUtils;
+import com.jmh.springboottest.utils.GetRestResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.List;
 
 
 /**
@@ -16,6 +23,11 @@ import java.io.*;
 @RequestMapping("/files")
 public class FileController{
 
+    @Autowired
+    FileService fileService;
+
+    @Value("${http.url}")
+    String path ;
     /**
      * 文件上传
      * @param request
@@ -25,8 +37,10 @@ public class FileController{
     @PostMapping("/import")
     public void importFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        String s = FileUtils.importFile(request, response);
-        System.out.println(s);
+        fileService.importFile(request,response);
+       // List list = FileUtils.importFile(request,response);
+        response.sendRedirect("http://"+path+"/file");
+
     }
 
 
@@ -34,14 +48,27 @@ public class FileController{
      * 文件下载
      * @param request
      * @param res
-     * @param fileName 文件名
+     * @param id 文件id
      * @return
      * @throws IOException
      */
     @GetMapping("/download")
-    public String downloadFile(HttpServletRequest request,HttpServletResponse res,String fileName) throws IOException {
-        FileUtils.downloadFile(request,res,fileName);
-        return null;
+    public RestResult downloadFile(HttpServletRequest request,HttpServletResponse res,Long id) throws IOException {
+        fileService.downloadFile(request,res,id);
+        return GetRestResult.success("下载成功");
     }
 
+    //文件列表
+    @GetMapping
+    public RestResult fileList(){
+        List<File> files = fileService.fileList();
+        return GetRestResult.success(files);
+    }
+    //删除文件
+    @DeleteMapping
+    public void deleteById(Long id,HttpServletRequest request,HttpServletResponse response) throws IOException {
+
+        fileService.deleteById(id);
+
+    }
 }

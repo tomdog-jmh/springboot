@@ -10,8 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 
 /**
  * @创建人: 蒋明宏
@@ -20,10 +19,16 @@ import java.util.Date;
  */
 public class FileUtils {
 
-    public static String importFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+    /**
+     * 上传文件
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    public static List<Map<String,String>> importFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
         File file = new File("");
-        String sysPath = file.getCanonicalPath()+"/src/main/resources/file/";
+        String sysPath = file.getCanonicalPath()+"\\src\\main\\resources\\file\\";
         String filePath = "";
         // 如果目录不存在则创建
         File uploadDir = new File(sysPath);
@@ -31,20 +36,35 @@ public class FileUtils {
             uploadDir.mkdir();
         }
         Collection<Part> parts = request.getParts();
+        List<Map<String,String>> fileList=new ArrayList<>();
         for (Part part:parts) {
             if (part.getContentType() != null){
-                filePath = sysPath+part.getSubmittedFileName();
+                Date date = new Date();
+                long time = date.getTime();
+                filePath = sysPath+time+part.getSubmittedFileName();
+                Map<String, String> map = new HashMap<>();
+                map.put("sysName",time+part.getSubmittedFileName());
+                map.put("fileName",part.getSubmittedFileName());
+                map.put("sysPath",filePath);
+                fileList.add(map);
                 File storeFile = new File(filePath);
                 part.write(filePath);
             }
         }
-        return filePath;
+        return fileList;
     }
 
-
+    /**
+     * 下载文件
+     * @param request
+     * @param res
+     * @param fileName
+     * @return
+     * @throws IOException
+     */
     public static String downloadFile(HttpServletRequest request,HttpServletResponse res,String fileName) throws IOException {
         File file = new File("");
-        String sysPath = file.getCanonicalPath()+"/src/main/resources/file/";
+        String sysPath = file.getCanonicalPath()+"\\src\\main\\resources\\file\\";
         //组合成完整的文件路径
         String targetPath =sysPath+fileName;
         //方法1：IO流实现下载的功能
@@ -63,4 +83,23 @@ public class FileUtils {
         return null;
     }
 
+    public static void deleteFile(String fileName) {
+            try {
+                File file = new File("");
+                String sysPath = file.getCanonicalPath()+"\\src\\main\\resources\\file\\";
+                //组合成完整的文件路径
+                String targetPath =sysPath+fileName;
+                File deleteFile = new File(targetPath);
+                if (deleteFile.isFile()){
+                    deleteFile.delete();
+                }
+            }catch (Exception e){
+                throw new RuntimeException();
+            }
+
+
+
+
+
+    }
 }

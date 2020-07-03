@@ -12,9 +12,9 @@ spring:
     prefix: classpath:/templates/
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/test?seUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://127.0.0.1:3306/boot_test?seUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
     username: root
-    password: root
+    password: 123456
 
     type: com.alibaba.druid.pool.DruidDataSource
     filters: stat
@@ -52,4 +52,6 @@ logging:
   level:
     com.jmh.springboottest: debug
 
+http:
+  url: 124.70.139.88:8888
 

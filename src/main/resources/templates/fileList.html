@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>文件上传实例</title>
+</head>
+<script>
+ window.onload=function () {
+     list()
+ }
+
+ function deleteByid(id) {
+     var httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
+     var url="/files?id="+id;
+     httpRequest.open('delete', url, true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+     httpRequest.send();//第三步：发送请求  将请求参数写在URL中
+     // alert(id);
+     httpRequest.onreadystatechange = function () {
+         if (httpRequest.readyState == 4 && httpRequest.status == 200){
+             list()
+         }
+     }
+
+ }
+
+ function list() {
+     var httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
+     httpRequest.open('GET', '/files', true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+     httpRequest.send();
+     httpRequest.onreadystatechange = function () {
+         var json = httpRequest.responseText;//获取到json字符串，还需解析
+         if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+             var jsonParse= JSON.parse(json)
+             console.log(jsonParse)
+             var table = document.getElementById("table1")
+             table.innerHTML=""
+             for (var i = 0; i < jsonParse.data.length; i++) {
+                 var tr = document.createElement("tr");
+                 var html=
+                     "            <th>"+jsonParse.data[i].fileName+"</th>\n" +
+                     "            <th>"+jsonParse.data[i].createTime+"</th>\n" +
+                     "            <th>\n" +
+                     "                <form action=\"/files/download\" method=\"get\">\n" +
+                     "                    <input type=\"text\" name=\"id\" value=\""+jsonParse.data[i].id+"\" style=\"display:none\">\n" +
+                     "                    <input type=\"submit\" value=\"下载\"/>\n" +
+                     "                </form>\n" +
+                     "                <button onclick=deleteByid("+jsonParse.data[i].id+")>删除</button>\n" +
+                     "            </th>\n"
+                 tr.innerHTML=html
+                 table.appendChild(tr)
+             }
+         }
+     }
+ }
+</script>
+<body>
+    <form method="post" action="/files/import" enctype="multipart/form-data" onsubmit="this, navTabAjaxDone">
+        选择一个文件:<input type="file" name="uploadFile1" />
+        <input type="submit" value="上传" />
+    </form>
+
+    <table >
+        <thead>
+        <th>文件名</th>
+        <th>上传时间</th>
+        <th>操作</th>
+        </thead>
+        <tbody id="table1">
+
+        </tbody>
+
+    </table>
+</body>
+</html>

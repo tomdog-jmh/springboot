@@ -15,5 +15,5 @@ public class PageController {
         return "login";
     }
     @RequestMapping("/file")
-    public String file(){ return "file";}
+    public String file(){ return "fileList";}
 }
