@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jmh.springboottest.mapper.ListMapper">
+
+    <resultMap id="BaseResultMap" type="com.jmh.springboottest.pojo.PersonalMessage">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="now_company" jdbcType="VARCHAR" property="nowCompany"/>
+        <result column="now_branch" jdbcType="VARCHAR" property="nowBranch"/>
+        <result column="now_job" jdbcType="VARCHAR" property="nowJob" />
+        <result column="now_job_name" jdbcType="VARCHAR" property="nowJobName" />
+        <result column="birthday" jdbcType="VARCHAR" property="birthday" />
+        <result column="job_date" jdbcType="VARCHAR" property="jobDate" />
+        <result column="education" jdbcType="VARCHAR" property="education" />
+        <result column="school" jdbcType="VARCHAR" property="school" />
+        <result column="major" jdbcType="VARCHAR" property="major" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="into_date" jdbcType="VARCHAR" property="intoDate" />
+        <result column="into_num" jdbcType="INTEGER" property="intoNum" />
+        <result column="out_date" jdbcType="VARCHAR" property="outDate" />
+        <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+        <result column="choice_name" jdbcType="VARCHAR" property="choiceName" />
+    </resultMap>
+    <insert id="exportInto">
+        insert into list
+        (id,name,sex,now_company,now_branch,
+        now_job,now_job_name,birthday,job_date,education,
+        school,major,type,into_date,into_num,
+        out_date,remarks,status,choice_name)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            null ,#{item.name},#{item.sex},#{item.nowCompany},#{item.nowBranch},
+            #{item.nowJob},#{item.nowJobName},#{item.birthday},#{item.jobDate},#{item.education},
+            #{item.school},#{item.major},#{item.type},#{item.intoDate},#{item.intoNum},
+            #{item.outDate},#{item.remarks},#{item.status},#{item.choiceName}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateById">
+        UPDATE
+         `list`
+         SET
+         status = #{type},
+         choice_name = ''
+         WHERE id = #{id}
+    </update>
+
+    <update id="updateByIdList">
+        UPDATE
+         `list`
+         SET
+         status = '已选择',
+         choice_name = #{name}
+         WHERE id IN(
+        <foreach collection="idList" item="id" separator=",">
+            #{id}
+        </foreach>
+         )
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM `list` WHERE id IN(
+        <foreach collection="idList" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+    <select id="getList" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM `list`
+        WHERE 1=1
+        <if test='status == 1'>
+            AND  status = '已选择'
+        </if>
+        <if test='status == 2'>
+            AND  status = '未选择'
+        </if>
+    </select>
+
+    <select id="getListById" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM `list`
+        WHERE id IN(
+        <foreach collection="list" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+        AND status = '未选择'
+    </select>
+
+
+</mapper>

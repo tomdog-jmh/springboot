@@ -11,10 +11,10 @@ spring:
     encoding: UTF-8
     prefix: classpath:/templates/
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://124.70.139.88:3306/sys?seUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://8.131.62.2:3306/hr?seUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
     username: root
-    password: jmh123456
+    password: 2229559
 
     type: com.alibaba.druid.pool.DruidDataSource
     filters: stat
@@ -52,6 +52,6 @@ logging:
   level:
     com.jmh.springboottest: debug
 
-http:
-  url: 124.70.139.88:8888
+#http:
+#  url: 124.70.139.88:8888
 

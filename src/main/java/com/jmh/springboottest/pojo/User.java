@@ -1,18 +1,39 @@
 package com.jmh.springboottest.pojo;
 
+/**
+ * name : jmh
+ * time : 2021/1/22 10:11
+ * @author snjmh
+ */
 public class User {
-    private Integer id;
-
+    private int id;
+    private String account;
+    private String password;
     private String name;
+    private int level;
 
-    private Integer age;
-
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getName() {
@@ -20,14 +41,14 @@ public class User {
     }
 
     public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+        this.name = name;
     }
 
-    public Integer getAge() {
-        return age;
+    public int getLevel() {
+        return level;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setLevel(int level) {
+        this.level = level;
     }
 }
